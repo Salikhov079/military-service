@@ -11,9 +11,9 @@ import (
 )
 
 type Storage struct {
-	Db *sql.DB
-	Bullets storage.BulletI
-	Fuels storage.FuelI
+	Db         *sql.DB
+	Bullets    storage.BulletI
+	Fuels      storage.FuelI
 	Technoques storage.TechniqueI
 }
 
@@ -31,32 +31,29 @@ func DbConn() (storage.StorageI, error) {
 	// Connecting to postgres
 	db, err := sql.Open("postgres", dbCon)
 	if err != nil {
-		slog.Warn("Unable to connect to database:", err)
+		slog.Warn("Unable to connect to database: ", err.Error(), "")
 		return nil, err
 	}
 	return &Storage{Db: db}, nil
 }
 
-
-func(s *Storage) Bullet() storage.BulletI{
+func (s *Storage) Bullet() storage.BulletI {
 	if s.Bullets == nil {
 		s.Bullets = NewBullet(s.Db)
 	}
 	return s.Bullets
 }
 
-func(s *Storage) Fuel() storage.FuelI{
+func (s *Storage) Fuel() storage.FuelI {
 	if s.Fuels == nil {
 		s.Fuels = NewFuel(s.Db)
 	}
 	return s.Fuels
 }
 
-func(s *Storage) Technique() storage.TechniqueI{
+func (s *Storage) Technique() storage.TechniqueI {
 	if s.Technoques == nil {
 		s.Technoques = NewTechnique(s.Db)
 	}
 	return s.Technoques
 }
-
-

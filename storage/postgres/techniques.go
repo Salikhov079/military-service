@@ -67,7 +67,8 @@ func (t *Technique) Get(ctx context.Context, req *pb.ById) (*pb.Technique, error
 	FROM techniques
 	WHERE id = $1
 	`
-	_, err := t.db.ExecContext(ctx, query, req.Id)
+	var technique pb.Technique
+	err := t.db.QueryRowContext(ctx, query, req.Id).Scan(&technique.Id, &technique.Model, &technique.Type, &technique.Quantity)
 	if err != nil {
 		log.Fatal("error while getting technique")
 		return nil, err

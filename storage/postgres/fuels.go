@@ -67,12 +67,13 @@ func (f *Fuel) Get(ctx context.Context, req *pb.ById) (*pb.Fuel, error) {
 	FROM fuels
 	WHERE id = $1
 	`
-	_, err := f.db.ExecContext(ctx, query, req.Id)
+	var feul pb.Fuel
+	err := f.db.QueryRowContext(ctx, query, req.Id).Scan(&feul.Id, &feul.Type, &feul.Quantity)
 	if err != nil {
 		log.Fatal("error while getting fuel")
 		return nil, err
 	}
-	return &pb.Fuel{}, nil
+	return &feul, nil
 }
 
 func (f *Fuel) GetAll(ctx context.Context, req *pb.FuelReq) (*pb.AllFuels, error) {
@@ -111,6 +112,6 @@ func (f *Fuel) GetAll(ctx context.Context, req *pb.FuelReq) (*pb.AllFuels, error
 		}
 		fuels = append(fuels, &fuel)
 	}
-		return &pb.AllFuels{Fuels: fuels}, nil
+	return &pb.AllFuels{Fuels: fuels}, nil
 
 }

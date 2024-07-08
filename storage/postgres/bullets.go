@@ -25,7 +25,7 @@ func (b *Bullet) Create(ctx context.Context, req *pb.BulletReq) (*pb.Void, error
 	INSERT INTO bullets(id, caliber, type, quantity)
 	VALUES($1, $2, $3, $4)
 	`
-	_, err := b.db.ExecContext(ctx,query, id, req.Caliber, req.Type, req.Quantity)
+	_, err := b.db.ExecContext(ctx, query, id, req.Caliber, req.Type, req.Quantity)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
@@ -67,15 +67,16 @@ func (b *Bullet) Get(ctx context.Context, req *pb.ById) (*pb.Bullet, error) {
 	FROM bullets
 	WHERE id = $1
 	`
-	_, err := b.db.ExecContext(ctx, query, req.Id)
+	var bullet pb.Bullet
+	err := b.db.QueryRowContext(ctx, query, req.Id).Scan(&bullet.Id, &bullet.Caliber, &bullet.Type, &bullet.Quantity)
 	if err != nil {
 		log.Fatal("error while getting bullet")
 		return nil, err
 	}
-	return &pb.Bullet{}, nil
+	return &bullet, nil
 }
 
-func (b *Bullet) GetAll(ctx context.Context, req *pb.BulletReq) (*pb.AllBullets, error){
+func (b *Bullet) GetAll(ctx context.Context, req *pb.BulletReq) (*pb.AllBullets, error) {
 	query := `
 	SELECT id, caliber, type, quantity
 	FROM bullets
@@ -115,8 +116,5 @@ func (b *Bullet) GetAll(ctx context.Context, req *pb.BulletReq) (*pb.AllBullets,
 		bullets = append(bullets, &bullet)
 	}
 	return &pb.AllBullets{Bullets: bullets}, nil
-	
-
-
 
 }
