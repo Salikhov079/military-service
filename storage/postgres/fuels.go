@@ -75,7 +75,7 @@ func (f *Fuel) Get(ctx context.Context, req *pb.ById) (*pb.Fuel, error) {
 	return &pb.Fuel{}, nil
 }
 
-func (f *Fuel) GetAll(ctx context.Context, req *pb.FuelReq) (*pb.Fuel, error) {
+func (f *Fuel) GetAll(ctx context.Context, req *pb.FuelReq) (*pb.AllFuels, error) {
 
 	query := `
 	SELECT id, type, quantity
@@ -111,6 +111,6 @@ func (f *Fuel) GetAll(ctx context.Context, req *pb.FuelReq) (*pb.Fuel, error) {
 		}
 		fuels = append(fuels, &fuel)
 	}
-		return &pb.Fuel{}, nil
+		return &pb.AllFuels{Fuels: fuels}, nil
 
 }

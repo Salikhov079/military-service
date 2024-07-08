@@ -25,7 +25,7 @@ type FuelI interface {
 	Update(ctx context.Context, req *pb.Fuel) (*pb.Void, error)
 	Delete(ctx context.Context, req *pb.ById) (*pb.Void, error)
 	Get(ctx context.Context, req *pb.ById) (*pb.Fuel, error)
-	GetAll(ctx context.Context, req *pb.FuelReq) (*pb.Fuel, error)
+	GetAll(ctx context.Context, req *pb.FuelReq) (*pb.AllFuels, error)
 }
 
 type TechniqueI interface {
