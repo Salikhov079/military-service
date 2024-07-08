@@ -75,32 +75,32 @@ func (t *Technique) Get(ctx context.Context, req *pb.ById) (*pb.Technique, error
 	return &pb.Technique{}, nil
 }
 
-func (t *Technique) GetAll(ctx context.Context, req *pb.TechniqueReq) (*pb.AllTechnique, error) {
 
+func (t *Technique) GetAll(ctx context.Context, req *pb.TechniqueReq) (*pb.AllTechnique, error) {
 	query := `
 	SELECT id, model, type, quantity
-	FROM fuels
+	FROM techniques
 	`
 	param := make(map[string]interface{})
-	filter := `where deleted_at = 0`
+	filter := `WHERE deleted_at = 0`
 	if req.Type != "" {
 		param["type"] = req.Type
-		filter += ` and type = :type`
+		filter += ` AND type = :type`
 	}
 	if req.Quantity != 0 {
 		param["quantity"] = req.Quantity
-		filter += ` and quantity = :quantity`
+		filter += ` AND quantity = :quantity`
 	}
 	if req.Model != "" {
 		param["model"] = req.Model
-		filter += ` and model = :model`
+		filter += ` AND model = :model`
 	}
 	query += filter
 
-	query, arr := helper.ReplaceQueryParams(query, param)
-	rows, err := t.db.QueryContext(ctx, query, arr...)
+	query, args := helper.ReplaceQueryParams(query, param)
+	rows, err := t.db.QueryContext(ctx, query, args...)
 	if err != nil {
-		log.Fatal("error while getting all bullets")
+		log.Printf("Error while getting all techniques: %v", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -108,13 +108,18 @@ func (t *Technique) GetAll(ctx context.Context, req *pb.TechniqueReq) (*pb.AllTe
 	var techniques []*pb.Technique
 	for rows.Next() {
 		var technique pb.Technique
-		err = rows.Scan(&technique.Id, &technique.Model, &technique.Type, &technique.Quantity)
-		if err != nil {
-			log.Fatal("error while scanning bullet")
+		if err = rows.Scan(&technique.Id, &technique.Model, &technique.Type, &technique.Quantity); err != nil {
+			log.Printf("Error while scanning technique: %v", err)
 			return nil, err
 		}
 		techniques = append(techniques, &technique)
 	}
+
+	if err = rows.Err(); err != nil {
+		log.Printf("Error after iterating rows: %v", err)
+		return nil, err
+	}
+
 	return &pb.AllTechnique{
 		Techniques: techniques,
 	}, nil

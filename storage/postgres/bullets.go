@@ -25,9 +25,9 @@ func (b *Bullet) Create(ctx context.Context, req *pb.BulletReq) (*pb.Void, error
 	INSERT INTO bullets(id, caliber, type, quantity)
 	VALUES($1, $2, $3, $4)
 	`
-	_, err := b.db.ExecContext(ctx,query, id, req.Caliber, req.Type, req.Quantity)
+	_, err := b.db.ExecContext(ctx, query, id, req.Caliber, req.Type, req.Quantity)
 	if err != nil {
-		log.Fatal("error while creating bullet")
+		log.Printf("Error while creating bullet: %v", err)
 		return nil, err
 	}
 	return &pb.Void{}, nil
