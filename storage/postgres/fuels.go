@@ -80,7 +80,7 @@ func (f *Fuel) GetAll(ctx context.Context, req *pb.FuelReq) (*pb.AllFuels, error
 
 	query := `
 	SELECT id, type, quantity
-	FROM fuels
+	FROM fuels 
 	`
 	param := make(map[string]interface{})
 	filter := `where deleted_at = 0`
@@ -114,4 +114,32 @@ func (f *Fuel) GetAll(ctx context.Context, req *pb.FuelReq) (*pb.AllFuels, error
 	}
 	return &pb.AllFuels{Fuels: fuels}, nil
 
+}
+
+func (b *Fuel) Add(ctx context.Context, req *pb.FuelAddSub) (*pb.Void, error) {
+	query := `
+	UPDATE fuels
+	SET quantity = quantity + $2
+	WHERE type = $1
+	`
+	_, err := b.db.ExecContext(ctx, query, req.Name, req.Quantity)
+	if err != nil {
+		log.Fatal("error while updating fuel")
+		return nil, err
+	}
+	return &pb.Void{}, nil
+}
+
+func (b *Fuel) Sub(ctx context.Context, req *pb.FuelAddSub) (*pb.Void, error) {
+	query := `
+	UPDATE fuels
+	SET quantity = quantity - $2
+	WHERE type = $1
+	`
+	_, err := b.db.ExecContext(ctx, query, req.Name, req.Quantity)
+	if err != nil {
+		log.Fatal("error while updating fuel")
+		return nil, err
+	}
+	return &pb.Void{}, nil
 }

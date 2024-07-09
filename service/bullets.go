@@ -37,3 +37,11 @@ func (b *BulletService) Get(ctx context.Context, req *pb.ById) (*pb.Bullet, erro
 func (b *BulletService) GetAll(ctx context.Context, req *pb.BulletReq) (*pb.AllBullets, error) {
 	return b.Bullet.Bullet().GetAll(ctx, req)
 }
+
+func (t *BulletService) Add(ctx context.Context, req *pb.BulletAddSub) (*pb.Void, error) {
+	return t.Bullet.Bullet().Add(ctx, req)
+}
+
+func (t *BulletService) Sub(ctx context.Context, req *pb.BulletAddSub) (*pb.Void, error) {
+	return t.Bullet.Bullet().Sub(ctx, req)
+}

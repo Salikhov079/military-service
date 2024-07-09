@@ -18,6 +18,8 @@ type BulletI interface {
 	Delete(ctx context.Context, req *pb.ById) (*pb.Void, error)
 	Get(ctx context.Context, req *pb.ById) (*pb.Bullet, error)
 	GetAll(ctx context.Context, req *pb.BulletReq) (*pb.AllBullets, error)
+	Add(ctx context.Context, req *pb.BulletAddSub) (*pb.Void, error)
+	Sub(ctx context.Context, req *pb.BulletAddSub) (*pb.Void, error)
 }
 
 type FuelI interface {
@@ -26,6 +28,8 @@ type FuelI interface {
 	Delete(ctx context.Context, req *pb.ById) (*pb.Void, error)
 	Get(ctx context.Context, req *pb.ById) (*pb.Fuel, error)
 	GetAll(ctx context.Context, req *pb.FuelReq) (*pb.AllFuels, error)
+	Add(ctx context.Context, req *pb.FuelAddSub) (*pb.Void, error)
+	Sub(ctx context.Context, req *pb.FuelAddSub) (*pb.Void, error)
 }
 
 type TechniqueI interface {
@@ -34,4 +38,6 @@ type TechniqueI interface {
 	Delete(ctx context.Context, req *pb.ById) (*pb.Void, error)
 	Get(ctx context.Context, req *pb.ById) (*pb.Technique, error)
 	GetAll(ctx context.Context, req *pb.TechniqueReq) (*pb.AllTechnique, error)
+	Add(ctx context.Context, req *pb.TechniqueAddSub) (*pb.Void, error)
+	Sub(ctx context.Context, req *pb.TechniqueAddSub) (*pb.Void, error)
 }

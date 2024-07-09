@@ -37,3 +37,11 @@ func (f *FuelService) Get(ctx context.Context, req *pb.ById) (*pb.Fuel, error) {
 func (f *FuelService) GetAll(ctx context.Context, req *pb.FuelReq) (*pb.AllFuels, error) {
 	return f.Fuel.Fuel().GetAll(ctx, req)
 }
+
+func (t *FuelService) Add(ctx context.Context, req *pb.FuelAddSub) (*pb.Void, error) {
+	return t.Fuel.Fuel().Add(ctx, req)
+}
+
+func (t *FuelService) Sub(ctx context.Context, req *pb.FuelAddSub) (*pb.Void, error) {
+	return t.Fuel.Fuel().Sub(ctx, req)
+}

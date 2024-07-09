@@ -73,14 +73,14 @@ func (t *Technique) Get(ctx context.Context, req *pb.ById) (*pb.Technique, error
 		log.Fatal("error while getting technique")
 		return nil, err
 	}
-	return &pb.Technique{}, nil
+	return &technique, nil
 }
 
 func (t *Technique) GetAll(ctx context.Context, req *pb.TechniqueReq) (*pb.AllTechnique, error) {
 
 	query := `
 	SELECT id, model, type, quantity
-	FROM fuels
+	FROM techniques
 	`
 	param := make(map[string]interface{})
 	filter := `where deleted_at = 0`
@@ -119,4 +119,32 @@ func (t *Technique) GetAll(ctx context.Context, req *pb.TechniqueReq) (*pb.AllTe
 	return &pb.AllTechnique{
 		Techniques: techniques,
 	}, nil
+}
+
+func (b *Technique) Add(ctx context.Context, req *pb.TechniqueAddSub) (*pb.Void, error) {
+	query := `
+	UPDATE techniques
+	SET quantity = quantity + $2
+	WHERE type = $1
+	`
+	_, err := b.db.ExecContext(ctx, query, req.Name, req.Quantity)
+	if err != nil {
+		log.Fatal("error while updating techniques")
+		return nil, err
+	}
+	return &pb.Void{}, nil
+}
+
+func (b *Technique) Sub(ctx context.Context, req *pb.TechniqueAddSub) (*pb.Void, error) {
+	query := `
+	UPDATE techniques
+	SET quantity = quantity - $2
+	WHERE type = $1
+	`
+	_, err := b.db.ExecContext(ctx, query, req.Name, req.Quantity)
+	if err != nil {
+		log.Fatal("error while updating techniques")
+		return nil, err
+	}
+	return &pb.Void{}, nil
 }

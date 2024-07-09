@@ -118,3 +118,32 @@ func (b *Bullet) GetAll(ctx context.Context, req *pb.BulletReq) (*pb.AllBullets,
 	return &pb.AllBullets{Bullets: bullets}, nil
 
 }
+
+
+func (b *Bullet) Add(ctx context.Context, req *pb.BulletAddSub) (*pb.Void, error) {
+	query := `
+	UPDATE bullets
+	SET quantity = quantity + $2
+	WHERE type = $1
+	`
+	_, err := b.db.ExecContext(ctx, query, req.Name, req.Quantity)
+	if err != nil {
+		log.Fatal("error while updating bullet")
+		return nil, err
+	}
+	return &pb.Void{}, nil
+}
+
+func (b *Bullet) Sub(ctx context.Context, req *pb.BulletAddSub) (*pb.Void, error) {
+	query := `
+	UPDATE bullets
+	SET quantity = quantity - $2
+	WHERE type = $1
+	`
+	_, err := b.db.ExecContext(ctx, query, req.Name, req.Quantity)
+	if err != nil {
+		log.Fatal("error while updating bullet")
+		return nil, err
+	}
+	return &pb.Void{}, nil
+}

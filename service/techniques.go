@@ -38,3 +38,11 @@ func (t *TechniqueService) Get(ctx context.Context, req *pb.ById) (*pb.Technique
 func (t *TechniqueService) GetAll(ctx context.Context, req *pb.TechniqueReq) (*pb.AllTechnique, error) {
 	return t.Technique.Technique().GetAll(ctx, req)
 }
+
+func (t *TechniqueService) Add(ctx context.Context, req *pb.TechniqueAddSub) (*pb.Void, error) {
+	return t.Technique.Technique().Add(ctx, req)
+}
+
+func (t *TechniqueService) Sub(ctx context.Context, req *pb.TechniqueAddSub) (*pb.Void, error) {
+	return t.Technique.Technique().Sub(ctx, req)
+}
